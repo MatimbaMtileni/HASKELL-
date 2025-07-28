@@ -2,10 +2,10 @@
 -- Write a program that asks the user for their name and prints a greeting.
 
 main :: IO ()
-main = do
-  putStrLn "What is your name?"
-  name <- getLine
-  putStrLn ("Hello, " ++ name ++ "!")
+main = greet "Matimba"  
+
+greet :: String -> IO ()
+greet name = putStrLn ("Hello, " ++ name ++ "!")
 
 
 -- HC11T2: Count Characters in a Line
@@ -13,10 +13,10 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter a line:"
-  line <- getLine
+  let line = "Hello, Haskell"  
   let count = length line
   putStrLn ("Number of characters: " ++ show count)
+
 
 
 -- HC11T3: Double a Number
@@ -24,10 +24,10 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter a number:"
-  input <- getLine
+  let input = "7"  
   let number = read input :: Int
   putStrLn ("Double of your number is: " ++ show (number * 2))
+
 
 
 -- HC11T4: Concatenate Two Lines
@@ -35,11 +35,10 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter the first line:"
-  line1 <- getLine
-  putStrLn "Enter the second line:"
-  line2 <- getLine
+  let line1 = "Hello, "
+  let line2 = "world!"
   putStrLn ("Concatenated line: " ++ line1 ++ line2)
+
 
 
 -- HC11T5: Repeat Until "quit"
@@ -48,16 +47,17 @@ main = do
 main :: IO ()
 main = do
   putStrLn "Type something (or type 'quit' to exit):"
-  loop
+  loopSim ["Matimba", "Mtileni", "quit"]
 
-loop :: IO ()
-loop = do
-  input <- getLine
+loopSim :: [String] -> IO ()
+loopSim [] = putStrLn "Program ended."
+loopSim (input:rest) =
   if input == "quit"
     then putStrLn "Program ended."
     else do
       putStrLn ("You said: " ++ input)
-      loop
+      loopSim rest
+
 
 
 -- HC11T6: Uppercase Converter
@@ -67,34 +67,43 @@ import Data.Char (toUpper)
 
 main :: IO ()
 main = do
-  putStrLn "Enter a line to convert to uppercase:"
-  input <- getLine
+  let input = "I'm learning haskell"
   let upper = map toUpper input
   putStrLn ("Uppercase version: " ++ upper)
+
 
 
 -- HC11T7: User Options
 -- Write a program that prints a list of options to the user and executes different code based on the user's choice.
 
 main :: IO ()
-main = do
+main = menuLoop ["1", "2", "3", "hello", "4", "3"]
+
+menuLoop :: [String] -> IO ()
+menuLoop [] = putStrLn "No more inputs. Program ended."
+menuLoop (choice:rest) = do
   putStrLn "Choose an option:"
   putStrLn "1. Greet"
   putStrLn "2. Add Two Numbers"
   putStrLn "3. Exit"
-  choice <- getLine
+  putStrLn ("User selected: " ++ choice)
   case choice of
     "1" -> do
-      putStrLn "Hello, user!"
-    "2" -> do
-      putStrLn "Enter first number:"
-      a <- getLine
-      putStrLn "Enter second number:"
-      b <- getLine
-      let sum = read a + read b :: Int
-      putStrLn ("Sum is: " ++ show sum)
-    "3" -> putStrLn "Goodbye!"
-    _   -> putStrLn "Invalid option selected."
+      putStrLn "Hello, user."
+      menuLoop rest
+    "2" -> case rest of
+      (a:b:rest') -> do
+        putStrLn ("Enter first number: " ++ a)
+        putStrLn ("Enter second number: " ++ b)
+        let sum = read a + read b :: Int
+        putStrLn ("Sum is: " ++ show sum)
+        menuLoop rest'
+      _ -> putStrLn "Not enough inputs for addition."
+    "3" -> putStrLn "Goodbye."
+    _ -> do
+      putStrLn "Invalid option selected."
+      menuLoop rest
+
 
 
 -- HC11T8: Even or Odd Checker
@@ -102,12 +111,12 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter a number:"
-  input <- getLine
+  let input = "42"  
   let num = read input :: Int
   if even num
     then putStrLn "The number is even."
     else putStrLn "The number is odd."
+
 
 
 -- HC11T9: Sum Two Numbers
@@ -115,12 +124,11 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter the first number:"
-  a <- getLine
-  putStrLn "Enter the second number:"
-  b <- getLine
+  let a = "10"  
+  let b = "20"  
   let sum = read a + read b :: Int
   putStrLn ("Sum is: " ++ show sum)
+
 
 
 -- HC11T10: Reverse User Input
@@ -128,6 +136,5 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Enter a string to reverse:"
-  input <- getLine
+  let input = "coxygen global"
   putStrLn ("Reversed string: " ++ reverse input)
