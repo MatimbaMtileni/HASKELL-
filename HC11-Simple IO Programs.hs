@@ -2,10 +2,11 @@
 -- Write a program that asks the user for their name and prints a greeting.
 
 main :: IO ()
-main = greet "Matimba"  
+main = do
+  putStrLn "What is your name?"
+  name <- getLine
+  putStrLn ("Hello, " ++ name ++ "!")
 
-greet :: String -> IO ()
-greet name = putStrLn ("Hello, " ++ name ++ "!")
 
 
 -- HC11T2: Count Characters in a Line
@@ -13,9 +14,9 @@ greet name = putStrLn ("Hello, " ++ name ++ "!")
 
 main :: IO ()
 main = do
-  let line = "Hello, Haskell"  
-  let count = length line
-  putStrLn ("Number of characters: " ++ show count)
+  putStrLn "Enter a line:"
+  line <- getLine
+  putStrLn ("Character count: " ++ show (length line))
 
 
 
@@ -24,20 +25,25 @@ main = do
 
 main :: IO ()
 main = do
-  let input = "7"  
+  putStrLn "Enter a number:"
+  input <- getLine
   let number = read input :: Int
-  putStrLn ("Double of your number is: " ++ show (number * 2))
+  putStrLn ("Double: " ++ show (number * 2))
 
 
 
--- HC11T4: Concatenate Two Lines
--- Write a program that reads two lines of input and prints them concatenated.
+
+--HC11T4: Concatenate Two Lines
+--Write a program that reads two lines of input and prints them concatenated.
 
 main :: IO ()
 main = do
-  let line1 = "Hello, "
-  let line2 = "world!"
-  putStrLn ("Concatenated line: " ++ line1 ++ line2)
+  putStrLn "Enter the first line:"
+  line1 <- getLine
+  putStrLn "Enter the second line:"
+  line2 <- getLine
+  putStrLn ("Concatenated: " ++ line1 ++ line2)
+
 
 
 
@@ -46,17 +52,18 @@ main = do
 
 main :: IO ()
 main = do
-  putStrLn "Type something (or type 'quit' to exit):"
-  loopSim ["Matimba", "Mtileni", "quit"]
+  putStrLn "Type something (or 'quit' to exit):"
+  loop
 
-loopSim :: [String] -> IO ()
-loopSim [] = putStrLn "Program ended."
-loopSim (input:rest) =
+loop :: IO ()
+loop = do
+  input <- getLine
   if input == "quit"
-    then putStrLn "Program ended."
+    then putStrLn "Goodbye!"
     else do
-      putStrLn ("You said: " ++ input)
-      loopSim rest
+      putStrLn ("You typed: " ++ input)
+      loop
+
 
 
 
@@ -67,9 +74,10 @@ import Data.Char (toUpper)
 
 main :: IO ()
 main = do
-  let input = "I'm learning haskell"
-  let upper = map toUpper input
-  putStrLn ("Uppercase version: " ++ upper)
+  putStrLn "Enter text to convert to uppercase:"
+  input <- getLine
+  putStrLn (map toUpper input)
+
 
 
 
@@ -77,32 +85,24 @@ main = do
 -- Write a program that prints a list of options to the user and executes different code based on the user's choice.
 
 main :: IO ()
-main = menuLoop ["1", "2", "3", "hello", "4", "3"]
-
-menuLoop :: [String] -> IO ()
-menuLoop [] = putStrLn "No more inputs. Program ended."
-menuLoop (choice:rest) = do
+main = do
   putStrLn "Choose an option:"
   putStrLn "1. Greet"
-  putStrLn "2. Add Two Numbers"
+  putStrLn "2. Add numbers"
   putStrLn "3. Exit"
-  putStrLn ("User selected: " ++ choice)
-  case choice of
-    "1" -> do
-      putStrLn "Hello, user."
-      menuLoop rest
-    "2" -> case rest of
-      (a:b:rest') -> do
-        putStrLn ("Enter first number: " ++ a)
-        putStrLn ("Enter second number: " ++ b)
-        let sum = read a + read b :: Int
-        putStrLn ("Sum is: " ++ show sum)
-        menuLoop rest'
-      _ -> putStrLn "Not enough inputs for addition."
-    "3" -> putStrLn "Goodbye."
-    _ -> do
-      putStrLn "Invalid option selected."
-      menuLoop rest
+  option <- getLine
+  case option of
+    "1" -> putStrLn "Hello there!"
+    "2" -> do
+      putStrLn "Enter first number:"
+      a <- getLine
+      putStrLn "Enter second number:"
+      b <- getLine
+      let sum = read a + read b :: Int
+      putStrLn ("Sum: " ++ show sum)
+    "3" -> putStrLn "Goodbye!"
+    _   -> putStrLn "Invalid option."
+
 
 
 
@@ -111,11 +111,13 @@ menuLoop (choice:rest) = do
 
 main :: IO ()
 main = do
-  let input = "42"  
-  let num = read input :: Int
-  if even num
-    then putStrLn "The number is even."
-    else putStrLn "The number is odd."
+  putStrLn "Enter a number:"
+  input <- getLine
+  let n = read input :: Int
+  if even n
+    then putStrLn "That number is even."
+    else putStrLn "That number is odd."
+
 
 
 
@@ -124,10 +126,13 @@ main = do
 
 main :: IO ()
 main = do
-  let a = "10"  
-  let b = "20"  
+  putStrLn "Enter first number:"
+  a <- getLine
+  putStrLn "Enter second number:"
+  b <- getLine
   let sum = read a + read b :: Int
-  putStrLn ("Sum is: " ++ show sum)
+  putStrLn ("Sum: " ++ show sum)
+
 
 
 
@@ -136,5 +141,7 @@ main = do
 
 main :: IO ()
 main = do
-  let input = "coxygen global"
-  putStrLn ("Reversed string: " ++ reverse input)
+  putStrLn "Enter a string to reverse:"
+  input <- getLine
+  putStrLn ("Reversed: " ++ reverse input)
+
